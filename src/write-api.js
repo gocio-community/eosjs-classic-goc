@@ -105,7 +105,7 @@ function WriteApi(Network, network, config, Transaction) {
       const abiPromises = []
 
       // Eos contract operations are cached (efficient and offline transactions)
-      const cachedCode = new Set(['eosio', 'eosio.token', 'eosio.null'])
+      const cachedCode = new Set(['gocio', 'gocio.token', 'gocio.null'])
       accounts.forEach(account => {
         if(!cachedCode.has(account)) {
           abiPromises.push(config.abiCache.abiAsync(account))
@@ -174,7 +174,7 @@ function WriteApi(Network, network, config, Transaction) {
     })
   }
 
-  function genMethod(type, definition, transactionArg, account = 'eosio.token', name = type) {
+  function genMethod(type, definition, transactionArg, account = 'gocio.token', name = type) {
     return function (...args) {
       if (args.length === 0) {
         console.log(usage({name, type}, definition, Network, account, config))
@@ -444,7 +444,7 @@ function WriteApi(Network, network, config, Transaction) {
       'delay_sec', 'max_net_usage_words', 'max_cpu_usage_ms'
     ]) {
       if(arg[txField] !== undefined) {
-        // eos.transaction('eosio', eosio => { eosio.myaction(..) }, {delay_sec: 369})
+        // eos.transaction('gocio', gocio => { gocio.myaction(..) }, {delay_sec: 369})
         // eos.transaction({delay_sec: 369, actions: [...]})
         rawTx[txField] = arg[txField]
       } else if(options[txField] !== undefined) {

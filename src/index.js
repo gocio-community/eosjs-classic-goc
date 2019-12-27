@@ -9,11 +9,11 @@ const writeApiGen = require('./write-api')
 const format = require('./format')
 const schema = require('./schema')
 
-const token = require('./schema/eosio.token.abi.json')
-const system = require('./schema/eosio.system.abi.json')
-const eosio_null = require('./schema/eosio.null.abi.json')
+const token = require('./schema/gocio.token.abi.json')
+const system = require('./schema/gocio.system.abi.json')
+const gocio_null = require('./schema/gocio.null.abi.json')
 
-const Eos = (config = {}) => {
+const Goc = (config = {}) => {
   const configDefaults = {
     httpEndpoint: 'http://127.0.0.1:8888',
     debug: false,
@@ -39,10 +39,10 @@ const Eos = (config = {}) => {
   return createEos(config)
 }
 
-module.exports = Eos
+module.exports = Goc
 
 Object.assign(
-  Eos,
+  Goc,
   {
     version: '16.0.0',
     modules: {
@@ -58,14 +58,14 @@ Object.assign(
 
     /** @deprecated */
     Testnet: function (config) {
-      console.error('deprecated, change Eos.Testnet(..) to just Eos(..)')
-      return Eos(config)
+      console.error('deprecated, change Goc.Testnet(..) to just Goc(..)')
+      return Goc(config)
     },
 
     /** @deprecated */
     Localnet: function (config) {
-      console.error('deprecated, change Eos.Localnet(..) to just Eos(..)')
-      return Eos(config)
+      console.error('deprecated, change Goc.Localnet(..) to just Goc(..)')
+      return Goc(config)
     }
   }
 )
@@ -76,9 +76,9 @@ function createEos(config) {
 
   const abis = []
   const abiCache = AbiCache(network, config)
-  abis.push(abiCache.abi('eosio.null', eosio_null))
-  abis.push(abiCache.abi('eosio.token', token))
-  abis.push(abiCache.abi('eosio', system))
+  abis.push(abiCache.abi('gocio.null', gocio_null))
+  abis.push(abiCache.abi('gocio.token', token))
+  abis.push(abiCache.abi('gocio', system))
 
   if(!config.chainId) {
     config.chainId = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'

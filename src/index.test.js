@@ -46,7 +46,7 @@ describe('offline', () => {
 
   describe('custom transactions', function () {
     const nonce = {
-      account: 'eosio.null',
+      account: 'gocio.null',
       name: 'nonce',
       data: '010f'
     }
@@ -122,7 +122,7 @@ describe('offline', () => {
       const trx = await eos.transaction({
         delay_sec: 369,
         actions: [{
-          account: 'eosio.null',
+          account: 'gocio.null',
           name: 'nonce',
           data: '010f',
           authorization: [{actor: 'inita', permission: 'owner'}]
@@ -142,8 +142,8 @@ describe('offline', () => {
     })
 
     it('contract', async function() {
-      const trx = await eos.transaction('eosio.token',
-        eosio_token => { eosio_token.transfer(...xfer) },
+      const trx = await eos.transaction('gocio.token',
+        gocio_token => { gocio_token.transfer(...xfer) },
         {delay_sec: 369}
       )
       assert.equal(trx.transaction.transaction.delay_sec, 369, 'delay_sec')
@@ -154,13 +154,13 @@ describe('offline', () => {
   it('load abi', async function() {
     const eos = Eos({httpEndpoint: null})
 
-    const abiBuffer = fs.readFileSync(`docker/contracts/eosio.bios/eosio.bios.abi`)
+    const abiBuffer = fs.readFileSync(`docker/contracts/gocio.bios/gocio.bios.abi`)
     const abiObject = JSON.parse(abiBuffer)
 
-    assert.deepEqual(abiObject, eos.fc.abiCache.abi('eosio.bios', abiBuffer).abi)
-    assert.deepEqual(abiObject, eos.fc.abiCache.abi('eosio.bios', abiObject).abi)
+    assert.deepEqual(abiObject, eos.fc.abiCache.abi('gocio.bios', abiBuffer).abi)
+    assert.deepEqual(abiObject, eos.fc.abiCache.abi('gocio.bios', abiObject).abi)
 
-    const bios = await eos.contract('eosio.bios')
+    const bios = await eos.contract('gocio.bios')
     assert(typeof bios.newaccount === 'function', 'unrecognized contract')
   })
 
@@ -182,15 +182,15 @@ describe('Contracts', () => {
   it('Messages do not sort', async function() {
     const local = Eos()
     const opts = {sign: false, broadcast: false}
-    const tx = await local.transaction(['currency', 'eosio.token'], ({currency, eosio_token}) => {
-      // make sure {account: 'eosio.token', ..} remains first
-      eosio_token.transfer('inita', 'initd', '1.1000 SYS', '')
+    const tx = await local.transaction(['currency', 'gocio.token'], ({currency, gocio_token}) => {
+      // make sure {account: 'gocio.token', ..} remains first
+      gocio_token.transfer('inita', 'initd', '1.1000 SYS', '')
 
       // {account: 'currency', ..} remains second (reverse sort)
       currency.transfer('inita', 'initd', '1.2000 CUR', '')
 
     }, opts)
-    assert.equal(tx.transaction.transaction.actions[0].account, 'eosio.token')
+    assert.equal(tx.transaction.transaction.actions[0].account, 'gocio.token')
     assert.equal(tx.transaction.transaction.actions[1].account, 'currency')
   })
 })
@@ -226,10 +226,10 @@ describe('Contract', () => {
   // avoids a same contract version deploy error.
   // TODO: undeploy contract instead (when API allows this)
 
-  deploy('eosio.msig')
-  deploy('eosio.token')
-  deploy('eosio.bios')
-  deploy('eosio.system')
+  deploy('gocio.msig')
+  deploy('gocio.token')
+  deploy('gocio.bios')
+  deploy('gocio.system')
 })
 
 describe('Contracts Load', () => {
@@ -240,8 +240,8 @@ describe('Contracts Load', () => {
       assert(contract, 'contract')
     })
   }
-  load('eosio')
-  load('eosio.token')
+  load('gocio')
+  load('gocio.token')
 })
 
 describe('keyProvider', () => {
@@ -263,7 +263,7 @@ describe('keyProvider', () => {
       tr.transfer('inita', 'initb', '1.0003 SYS', '')
     }, {keyProvider})
 
-    const token = await eos.contract('eosio.token')
+    const token = await eos.contract('gocio.token')
     await token.transfer('inita', 'initb', '1.0004 SYS', '', {keyProvider})
   })
 
@@ -355,9 +355,9 @@ describe('transactions', () => {
   it('create asset', async function() {
     const eos = Eos({signProvider})
     const pubkey = 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'
-    const auth = {authorization: 'eosio.token'}
-    await eos.create('eosio.token', '10000 ' + randomAsset(), auth)
-    await eos.create('eosio.token', '10000.00 ' + randomAsset(), auth)
+    const auth = {authorization: 'gocio.token'}
+    await eos.create('gocio.token', '10000 ' + randomAsset(), auth)
+    await eos.create('gocio.token', '10000.00 ' + randomAsset(), auth)
   })
 
   it('newaccount (broadcast)', () => {
@@ -367,20 +367,20 @@ describe('transactions', () => {
 
     return eos.transaction(tr => {
       tr.newaccount({
-        creator: 'eosio',
+        creator: 'gocio',
         name,
         owner: pubkey,
         active: pubkey
       })
 
       tr.buyrambytes({
-        payer: 'eosio',
+        payer: 'gocio',
         receiver: name,
         bytes: 8192
       })
 
       tr.delegatebw({
-        from: 'eosio',
+        from: 'gocio',
         receiver: name,
         stake_net_quantity: '10.0000 SYS',
         stake_cpu_quantity: '10.0000 SYS',
@@ -477,7 +477,7 @@ describe('transactions', () => {
   })
 
   it('action to contract', () => {
-    return Eos({signProvider}).contract('eosio.token').then(token => {
+    return Eos({signProvider}).contract('gocio.token').then(token => {
       return token.transfer('inita', 'initb', '1.0000 SYS', '')
         // transaction sent on each command
         .then(tr => {
@@ -493,9 +493,9 @@ describe('transactions', () => {
     let amt = 1 // for unique transactions
     const eos = Eos({signProvider})
 
-    const trTest = eosio_token => {
-      assert(eosio_token.transfer('inita', 'initb', amt + '.0000 SYS', '') == null)
-      assert(eosio_token.transfer('initb', 'inita', (amt++) + '.0000 SYS', '') == null)
+    const trTest = gocio_token => {
+      assert(gocio_token.transfer('inita', 'initb', amt + '.0000 SYS', '') == null)
+      assert(gocio_token.transfer('initb', 'inita', (amt++) + '.0000 SYS', '') == null)
     }
 
     const assertTr = tr =>{
@@ -503,19 +503,19 @@ describe('transactions', () => {
     }
 
     //  contracts can be a string or array
-    await assertTr(await eos.transaction(['eosio.token'], ({eosio_token}) => trTest(eosio_token)))
-    await assertTr(await eos.transaction('eosio.token', eosio_token => trTest(eosio_token)))
+    await assertTr(await eos.transaction(['gocio.token'], ({gocio_token}) => trTest(gocio_token)))
+    await assertTr(await eos.transaction('gocio.token', gocio_token => trTest(gocio_token)))
   })
 
   it('action to contract (contract tr nesting)', function () {
     this.timeout(4000)
     const tn = Eos({signProvider})
-    return tn.contract('eosio.token').then(eosio_token => {
-      return eosio_token.transaction(tr => {
+    return tn.contract('gocio.token').then(gocio_token => {
+      return gocio_token.transaction(tr => {
         tr.transfer('inita', 'initb', '1.0000 SYS', '')
         tr.transfer('inita', 'initc', '2.0000 SYS', '')
       }).then(() => {
-        return eosio_token.transfer('inita', 'initb', '3.0000 SYS', '')
+        return gocio_token.transfer('inita', 'initb', '3.0000 SYS', '')
       })
     })
   })
@@ -565,7 +565,7 @@ describe('transactions', () => {
       {
         actions: [
           {
-            account: 'eosio.token',
+            account: 'gocio.token',
             name: 'transfer',
             data: {
               from: 'inita',
@@ -594,10 +594,10 @@ describe('transactions', () => {
 
 it('Transaction ABI cache', async function() {
   const eos = Eos()
-  assert.throws(() => eos.fc.abiCache.abi('eosio.msig'), /not cached/)
-  const abi = await eos.fc.abiCache.abiAsync('eosio.msig')
-  assert.deepEqual(abi, await eos.fc.abiCache.abiAsync('eosio.msig', false/*force*/))
-  assert.deepEqual(abi, eos.fc.abiCache.abi('eosio.msig'))
+  assert.throws(() => eos.fc.abiCache.abi('gocio.msig'), /not cached/)
+  const abi = await eos.fc.abiCache.abiAsync('gocio.msig')
+  assert.deepEqual(abi, await eos.fc.abiCache.abiAsync('gocio.msig', false/*force*/))
+  assert.deepEqual(abi, eos.fc.abiCache.abi('gocio.msig'))
 })
 
 it('Transaction ABI lookup', async function() {

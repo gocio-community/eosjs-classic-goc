@@ -9,8 +9,8 @@ describe('shorthand', () => {
 
   it('authority', async () => {
     const eos = Eos({keyPrefix: 'PUB'})
-    const eosio = await eos.contract('eosio')
-    const {authority} = eosio.fc.structs
+    const gocio = await eos.contract('gocio')
+    const {authority} = gocio.fc.structs
 
     const pubkey = 'PUB6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'
     const auth = {threshold: 1, keys: [{key: pubkey, weight: 1}]}
@@ -24,8 +24,8 @@ describe('shorthand', () => {
 
   it('PublicKey sorting', async () => {
     const eos = Eos()
-    const eosio = await eos.contract('eosio')
-    const {authority} = eosio.fc.structs
+    const gocio = await eos.contract('gocio')
+    const {authority} = gocio.fc.structs
 
     const pubkeys = [
       'EOS7wBGPvBgRVa4wQN2zm5CjgBF6S7tP7R3JavtSa2unHUoVQGhey',
@@ -100,22 +100,22 @@ describe('shorthand', () => {
 
 })
 
-describe('Eosio Abi', () => {
+describe('gocio Abi', () => {
 
   function checkContract(name) {
     it(`${name} contract parses`, (done) => {
       const eos = Eos()
 
-      eos.contract('eosio.token', (error, eosio_token) => {
+      eos.contract('gocio.token', (error, gocio_token) => {
         assert(!error, error)
-        assert(eosio_token.transfer, 'eosio.token contract')
-        assert(eosio_token.issue, 'eosio.token contract')
+        assert(gocio_token.transfer, 'gocio.token contract')
+        assert(gocio_token.issue, 'gocio.token contract')
         done()
       })
     })
   }
-  checkContract('eosio')
-  checkContract('eosio.token')
+  checkContract('gocio')
+  checkContract('gocio.token')
 
   it('abi', async () => {
     const eos = Eos({defaults: true, broadcast: false, sign: false})
@@ -145,7 +145,7 @@ describe('Action.data', () => {
     const eos = Eos({forceActionDataHex: false})
     const {structs, types} = eos.fc
     const value = {
-      account: 'eosio.token',
+      account: 'gocio.token',
       name: 'transfer',
       data: {
         from: 'inita',
@@ -162,7 +162,7 @@ describe('Action.data', () => {
     const eos = Eos({forceActionDataHex: true})
     const {structs, types} = eos.fc
     const value = {
-      account: 'eosio.token',
+      account: 'gocio.token',
       name: 'transfer',
       data: {
         from: 'inita',
@@ -179,7 +179,7 @@ describe('Action.data', () => {
     const eos = Eos({forceActionDataHex: false})
     const {structs, types} = eos.fc
     const value = {
-      account: 'eosio.token',
+      account: 'gocio.token',
       name: 'mytype',
       data: '030a0b0c',
       authorization: []

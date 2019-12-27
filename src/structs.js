@@ -174,7 +174,7 @@ const PublicKeyEcc = (validation) => {
 
     toObject (value) {
       if (validation.defaults && value == null) {
-        const keyPrefix = validation.keyPrefix ? validation.keyPrefix : 'EOS'
+        const keyPrefix = validation.keyPrefix ? validation.keyPrefix : 'GOC'
         return keyPrefix + '6MRy..'
       }
       return value
@@ -421,7 +421,7 @@ const ExtendedAsset = (validation, baseTypes, customTypes) => {
           amount: '1.0000',
           precision: 4,
           symbol: 'SYS',
-          contract: 'eosio.token'
+          contract: 'gocio.token'
         }
       }
 
@@ -508,7 +508,7 @@ const abiOverride = structLookup => ({
   },
 
   'setabi.abi.appendByteBuffer': ({fields, object, b}) => {
-    const ser = structLookup('abi_def', 'eosio')
+    const ser = structLookup('abi_def', 'gocio')
     const b2 = new ByteBuffer(ByteBuffer.DEFAULT_CAPACITY, ByteBuffer.LITTLE_ENDIAN)
 
     if(Buffer.isBuffer(object.abi)) {

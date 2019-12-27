@@ -1,5 +1,5 @@
 {
-  "name": "eosjs-classic",
+  "name": "eosjs-classic-goc",
   "version": "16.0.11",
   "description": "General purpose library for the EOS blockchain.",
   "main": "lib/index.js",
@@ -15,16 +15,16 @@
     "coveralls": "npm run coverage && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "build": "rm -fr lib && npm run build_lib && npm run build_browser",
     "build_lib": "babel --copy-files src --out-dir lib",
-    "build_browser": "browserify -o lib/eos.js -s Eos lib/index.js",
+    "build_browser": "browserify -o lib/goc.js -s Goc lib/index.js",
     "build_browser_test": "browserify -o dist/test.js lib/*.test.js",
-    "minimize": "uglifyjs lib/eos.js -o lib/eos.min.js --source-map --compress --mangle",
+    "minimize": "uglifyjs lib/goc.js -o lib/goc.min.js --source-map --compress --mangle",
     "docs": "jsdoc2md src/format.js > docs/format.md",
-    "srisum": "srisum lib/eos.*",
+    "srisum": "srisum lib/goc.*",
     "prepublishOnly": "npm run build && npm run minimize && npm run docs && npm run srisum"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qiushaoxi/eosjs-classic.git"
+    "url": "git+https://github.com/gocio-community/eosjs-classic-goc.git"
   },
   "keywords": [
     "EOS",
